@@ -14,6 +14,8 @@ resource "aws_lambda_function" "sns_to_slack" {
     variables = {
       WEBHOOK_URL = "${var.slack_webhook_url}"
       CHANNEL_MAP = "${base64encode("${var.slack_channel_map}")}"
+      DEFAULT_USERNAME = "${var.default_username}"
+      DEFAULT_CHANNEL = "${var.default_channel}"
     }
   }
 }
