@@ -1,1 +1,5 @@
 virtualenv/
+.terraform/
+terraform.tfstate.backup
+terraform.tfstate
+secrets.tfvars
