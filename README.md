@@ -20,12 +20,7 @@ module "sns_to_slack" {
   source = "github.com/builtinnya/aws-sns-slack-terraform/module"
 
   slack_webhook_url = "hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
-
-  slack_channel_map = <<EOS
-  {
-    "topic-name": "#slack-channel"
-  }
-  EOS
+  slack_channel_map = "{ \"topic-name\": \"#slack-channel\" }"
 
   # The following variables are optional.
   lambda_function_name = "sns-to-slack"
