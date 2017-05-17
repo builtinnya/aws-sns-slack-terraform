@@ -1,5 +1,7 @@
 # aws-sns-slack-terraform
 
+![Minimal CloudWatch Example](screenshots/aws-sns-slack-terraform-minimal-cloudwatch.png)
+
 This is a [Terraform](https://www.terraform.io/) module which maps an AWS SNS topic name to a Slack channel.
 The AWS Lambda function code it uses is derived from [robbwagoner/aws-lambda-sns-to-slack](https://github.com/robbwagoner/aws-lambda-sns-to-slack).
 
