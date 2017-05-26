@@ -20,3 +20,13 @@ variable "default_channel" {
   type = "string"
   default = "#webhook-tests"
 }
+
+variable "lambda_iam_role_name" {
+  type = "string"
+  default = "lambda-sns-to-slack"
+}
+
+variable "lambda_iam_policy_name" {
+  type = "string"
+  default = "lambda-sns-to-slack-policy"
+}

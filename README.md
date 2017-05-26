@@ -51,13 +51,15 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 
 ### Configurable variables
 
-|       **Variable**       |                          **Description**                          | **Required** | **Default**      |
-|:------------------------:|:-----------------------------------------------------------------:|--------------|------------------|
-| **slack_webhook_url**    | Slack incoming webhook URL without protocol name.                 | yes          |                  |
-| **slack_channel_map**    | Topic-to-channel mapping string in JSON.                          | yes          |                  |
-| **lambda_function_name** | AWS Lambda function name for the Slack notifier                   | no           | `"sns-to-slack"` |
-| **default_username**     | Default username for notifications used if no matching one found. | no           |  `"AWS Lambda"`  |
-| **default_channel**      | Default channel used if no matching channel found.                | no           | `#webhook-tests` |
+|       **Variable**         |                          **Description**                          | **Required** | **Default**                    |
+|:--------------------------:|:-----------------------------------------------------------------:|--------------|--------------------------------|
+| **slack_webhook_url**      | Slack incoming webhook URL without protocol name.                 | yes          |                                |
+| **slack_channel_map**      | Topic-to-channel mapping string in JSON.                          | yes          |                                |
+| **lambda_function_name**   | AWS Lambda function name for the Slack notifier                   | no           | `"sns-to-slack"`               |
+| **default_username**       | Default username for notifications used if no matching one found. | no           |  `"AWS Lambda"`                |
+| **default_channel**        | Default channel used if no matching channel found.                | no           | `#webhook-tests`               |
+| **lambda_iam_role_name**   | IAM role name for lambda functions.                               | no           | `"lambda-sns-to-slack"`        |
+| **lambda_iam_policy_name** | IAM policy name for lambda functions.                             | no           | `"lambda-sns-to-slack-policy"` |
 
 ### Output variables
 
