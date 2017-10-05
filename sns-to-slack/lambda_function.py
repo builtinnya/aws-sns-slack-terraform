@@ -118,7 +118,7 @@ def lambda_handler(event, context):
 
     event_cond = 'default'
     sns = event['Records'][0]['Sns']
-    print('DEBUG:', sns['Message'])
+    print('DEBUG EVENT:', sns['Message'])
     json_msg = json.loads(sns['Message'])
 
     if sns['Subject']:
@@ -193,16 +193,22 @@ def lambda_handler(event, context):
         attachments = [{
             "fields": [{
                 "title": "Source",
-                "value": json_msg['Event Source']
+                "value": "{0} '{1}'".format(json_msg['Event Source'], json_msg['Source ID'])
                 },{
                 "title": "Message",
                 "value": json_msg['Event Message']
                 }]}]
         if json_msg.get('Identifier Link'):
-            attachments.append({
-                "text": "Details",
-                "title": json_msg['Identifier Link'].split('\n')[1],
-                "title_link": json_msg['Identifier Link'].split('\n')[0]})
+            title_arr = json_msg['Identifier Link'].split('\n')
+            if len(title_arr) >= 2:
+                title_str = title_arr[1]
+                title_lnk_str = title_arr[0]
+            else:
+                title_str = title_lnk_str = title_arr[0]
+            attachments[0]['fields'].append({
+                "title": "Details",
+                "value": "<{0}|{1}>".format(title_str, title_lnk_str)
+            })
     else:
         event_src = 'other'
 
@@ -230,7 +236,7 @@ def lambda_handler(event, context):
         'icon_emoji': get_slack_emoji(event_src, topic_name, event_cond.lower())}
     if attachments:
         payload['attachments'] = attachments
-    print('DEBUG:', payload)
+    print('DEBUG PAYLOAD:', json.dumps(payload))
     r = requests.post(WEBHOOK_URL, json=payload)
     return r.status_code
 
