@@ -154,6 +154,10 @@ $ WEBHOOK_URL="hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXX
   python sns-to-slack/lambda_function.py
 ```
 
+## Contributors
+
+See [CONTRIBUTORS.md](./CONTRIBUTORS.md).
+
 ## License
 
 Copyright © 2017 Naoto Yokoyama
