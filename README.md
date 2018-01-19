@@ -162,6 +162,6 @@ See [CONTRIBUTORS.md](./CONTRIBUTORS.md).
 
 ## License
 
-Copyright © 2017 Naoto Yokoyama
+Copyright © 2017-2018 Naoto Yokoyama
 
 Distributed under the Apache license version 2.0. See the [LICENSE](./LICENSE) file for full details.
