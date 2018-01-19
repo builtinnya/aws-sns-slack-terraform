@@ -28,6 +28,7 @@ module "sns_to_slack" {
   lambda_function_name = "sns-to-slack"
   default_username = "AWS Lambda"
   default_channel = "#webhook-tests"
+  default_emoji = ":information_source:"
 }
 
 resource "aws_sns_topic" "test_topic" {
@@ -57,7 +58,8 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 | **slack_channel_map**      | Topic-to-channel mapping string in JSON.                          | yes          |                                |
 | **lambda_function_name**   | AWS Lambda function name for the Slack notifier                   | no           | `"sns-to-slack"`               |
 | **default_username**       | Default username for notifications used if no matching one found. | no           |  `"AWS Lambda"`                |
-| **default_channel**        | Default channel used if no matching channel found.                | no           | `#webhook-tests`               |
+| **default_channel**        | Default channel used if no matching channel found.                | no           | `"#webhook-tests"`             |
+| **default_emoji**          | Default emoji used if no matching emoji found.                    | no           | `":information_source:"`       |
 | **lambda_iam_role_name**   | IAM role name for lambda functions.                               | no           | `"lambda-sns-to-slack"`        |
 | **lambda_iam_policy_name** | IAM policy name for lambda functions.                             | no           | `"lambda-sns-to-slack-policy"` |
 
