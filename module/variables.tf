@@ -21,6 +21,11 @@ variable "default_channel" {
   default = "#webhook-tests"
 }
 
+variable "default_emoji" {
+  type = "string"
+  default = ":information_source:"
+}
+
 variable "lambda_iam_role_name" {
   type = "string"
   default = "lambda-sns-to-slack"
