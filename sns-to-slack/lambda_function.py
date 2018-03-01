@@ -161,6 +161,10 @@ def lambda_handler(event, context):
             "fallback": message,
             "color": "good",
             "fields": [{
+                "title": "Channel Alert",
+                "value": "@channel",
+                "short": True
+            }, {
                 "title": "Capacity Change",
                 "value": autoscaling_capacity_change(json_msg['Cause']),
                 "short": True
