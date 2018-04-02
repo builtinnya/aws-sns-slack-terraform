@@ -63,6 +63,12 @@ def get_slack_emoji(event_src, topic_name, event_cond='default'):
                 'ok': ':ok:',
                 'alarm': ':fire:',
                 'insuffcient_data': ':question:'}},
+        'codepipeline': {
+          'notices': {
+                'STARTED': ':ok:',
+                'FAILED': ':fire:',
+                'SUCCEEDED': ':ok:'}
+        }
         'elasticache': {
             'notices': {'default': ':stopwatch:'}},
         'rds': {
@@ -83,6 +89,7 @@ def get_slack_username(event_src):
         'cloudwatch': 'AWS CloudWatch',
         'autoscaling': 'AWS AutoScaling',
         'elasticache': 'AWS ElastiCache',
+        'codepipeline': 'AWS CodePipeline',
         'rds': 'AWS RDS'}
 
     try:
@@ -209,6 +216,27 @@ def lambda_handler(event, context):
                 "title": "Details",
                 "value": "<{0}|{1}>".format(title_str, title_lnk_str)
             })
+    elif json_msg.get('source') == 'aws.codepipeline':
+        event_src = 'codepipeline'
+        event_cond = json_msg.get('detail').get('state')
+        color_map = {
+            'STARTED': 'good',
+            'SUCCEEDED': 'good',
+            'FAILED': 'danger'
+        }
+        attachments = [{
+            'fallback': json_msg.get('detail-type'),
+            'color': color_map[event_cond],
+            "fields": [{
+                "title": "Pipeline",
+                "value": json_msg.get('detail').get('pipeline'),
+                "short": True
+            }, {
+                "title": "State",
+                "value": json_msg.get('detail').get('state'),
+                "short": True
+            }]
+        }]
     else:
         event_src = 'other'
 
