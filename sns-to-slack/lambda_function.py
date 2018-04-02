@@ -68,7 +68,7 @@ def get_slack_emoji(event_src, topic_name, event_cond='default'):
                 'STARTED': ':ok:',
                 'FAILED': ':fire:',
                 'SUCCEEDED': ':ok:'}
-        }
+        },
         'elasticache': {
             'notices': {'default': ':stopwatch:'}},
         'rds': {
