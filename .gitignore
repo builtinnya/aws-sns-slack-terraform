@@ -3,3 +3,6 @@ virtualenv/
 terraform.tfstate.backup
 terraform.tfstate
 secrets.tfvars
+
+# Mac OS
+.DS_Store
