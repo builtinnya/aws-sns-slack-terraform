@@ -67,8 +67,7 @@ def get_slack_emoji(event_src, topic_name, event_cond='default'):
           'notices': {
                 'STARTED': ':ok:',
                 'FAILED': ':fire:',
-                'SUCCEEDED': ':ok:'}
-        },
+                'SUCCEEDED': ':ok:'}},
         'elasticache': {
             'notices': {'default': ':stopwatch:'}},
         'rds': {
@@ -218,6 +217,7 @@ def lambda_handler(event, context):
             })
     elif json_msg.get('source') == 'aws.codepipeline':
         event_src = 'codepipeline'
+        message = json_msg.get('detail-type')
         event_cond = json_msg.get('detail').get('state')
         color_map = {
             'STARTED': 'good',
@@ -229,12 +229,10 @@ def lambda_handler(event, context):
             'color': color_map[event_cond],
             "fields": [{
                 "title": "Pipeline",
-                "value": json_msg.get('detail').get('pipeline'),
-                "short": True
+                "value": json_msg.get('detail').get('pipeline')
             }, {
                 "title": "State",
-                "value": json_msg.get('detail').get('state'),
-                "short": True
+                "value": json_msg.get('detail').get('state')
             }]
         }]
     else:
