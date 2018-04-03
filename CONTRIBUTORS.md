@@ -1,5 +1,7 @@
 # aws-sns-slack-terraform contributors (in alphabetical order)
 
+- [davearata](https://github.com/davearata)
+  - [Codepipeline slack message support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/4)
 - [Katsutoshi Murakami](https://github.com/umisora)
   - [Default emoji support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/2)
 - [Nigel Gibbs](https://github.com/gibbsoft)
