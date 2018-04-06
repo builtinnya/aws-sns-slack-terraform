@@ -142,6 +142,7 @@ def lambda_handler(event, context):
             'INSUFFICIENT_DATA': 'warning',
             'ALARM': 'danger'
         }
+
         attachments = [{
             'fallback': json_msg,
             'message': json_msg,
@@ -154,6 +155,10 @@ def lambda_handler(event, context):
                 "title": "Status",
                 "value": json_msg['NewStateValue'],
                 "short": True
+            }, {
+                "title": "Description",
+                "value": json_msg['AlarmDescription'],
+                "short": False
             }, {
                 "title": "Reason",
                 "value": json_msg['NewStateReason'],
