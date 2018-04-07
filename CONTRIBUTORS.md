@@ -4,5 +4,7 @@
   - [Codepipeline slack message support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/4)
 - [Katsutoshi Murakami](https://github.com/umisora)
   - [Default emoji support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/2)
+- [Mehdi Ben Abdallah](https://github.com/mbenabda)
+  - [CloudWatch alarm description support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/5)
 - [Nigel Gibbs](https://github.com/gibbsoft)
   - [Add detail to RDS messages in Slack](https://github.com/builtinnya/aws-sns-slack-terraform/pull/1)
