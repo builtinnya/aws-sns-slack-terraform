@@ -1,5 +1,7 @@
 # aws-sns-slack-terraform contributors (in alphabetical order)
 
+- [Cyril Thomas](https://github.com/Ketouem)
+  - [Housekeeping: Pipenv & Slimmer package by Ketouem · Pull Request #6 · builtinnya/aws-sns-slack-terraform](https://github.com/builtinnya/aws-sns-slack-terraform/pull/6)
 - [davearata](https://github.com/davearata)
   - [Codepipeline slack message support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/4)
 - [Katsutoshi Murakami](https://github.com/umisora)
