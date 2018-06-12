@@ -21,6 +21,7 @@ coverage.xml
 *.cover
 .hypothesis/
 .pytest_cache/
+test_results/
 
 # Mac OS
 .DS_Store

@@ -1,0 +1,26 @@
+version: 2
+
+default: &default
+  docker:
+    - image: circleci/python:2.7
+
+jobs:
+  build:
+    <<: *default
+    steps:
+      - checkout
+      - run:
+          name: Installing pipenv
+          command: |
+            pip install --user pipenv
+            echo 'export PATH=$PATH:$HOME/.local/bin' >> $BASH_ENV
+      - run:
+          name: Installing all dependencies (including dev ones)
+          command: |
+            cd sns-to-slack
+            pipenv install --dev
+      - run:
+          name: Running tests
+          command: make -C sns-to-slack test
+      - store_test_results:
+          path: sns-to-slack/test_results
