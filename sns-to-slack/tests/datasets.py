@@ -45,8 +45,34 @@ DATADOG_EVENTS = json.loads(r"""
     "Message": "@sns-system-health edited\n\ndocker.cpu.usage over docker_image:nginx,host:host.example.com,environment:production was > 0.1 on average during the last 1m.\n\nMetric value: 0.21\n\nMonitor Status: https:\/\/app.datadoghq.com\/monitors#5203057?group=docker_image%3Anginx \u00b7 Edit Monitor: https:\/\/app.datadoghq.com\/monitors#5203057\/edit \u00b7 Event URL: https:\/\/app.datadoghq.com\/event\/event?id=4437030580617369909 \u00b7 Related Logs: https:\/\/app.datadoghq.com\/logs?query=",
     "Signature": "EXAMPLE",
     "Type": "Notification",
-    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
     "Subject": "[Triggered] CPU Load"
+  }
+},
+{
+  "Sns": {
+    "SignatureVersion": "1",
+    "SigningCertURL": "EXAMPLE",
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "@sns-system-health edited\n\ndocker.cpu.usage over docker_image:nginx,host:host.example.com,environment:production was > 0.1 on average during the last 1m.\n\nMetric value: 0.21\n\nMonitor Status: https:\/\/app.datadoghq.com\/monitors#5203057?group=docker_image%3Anginx \u00b7 Edit Monitor: https:\/\/app.datadoghq.com\/monitors#5203057\/edit \u00b7 Event URL: https:\/\/app.datadoghq.com\/event\/event?id=4437030580617369909 \u00b7 Related Logs: https:\/\/app.datadoghq.com\/logs?query=",
+    "Signature": "EXAMPLE",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "[Warn] CPU Load"
+  }
+},
+{
+  "Sns": {
+    "SignatureVersion": "1",
+    "SigningCertURL": "EXAMPLE",
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "@sns-system-health edited\n\ndocker.cpu.usage over docker_image:nginx,host:host.example.com,environment:production was > 0.1 on average during the last 1m.\n\nMetric value: 0.21\n\nMonitor Status: https:\/\/app.datadoghq.com\/monitors#5203057?group=docker_image%3Anginx \u00b7 Edit Monitor: https:\/\/app.datadoghq.com\/monitors#5203057\/edit \u00b7 Event URL: https:\/\/app.datadoghq.com\/event\/event?id=4437030580617369909 \u00b7 Related Logs: https:\/\/app.datadoghq.com\/logs?query=",
+    "Signature": "EXAMPLE",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "[Recovered] CPU Load"
   }
 }
 ]

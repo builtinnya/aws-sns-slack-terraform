@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from datasets import get_events, DATADOG_EVENTS
+from datasets import get_events
 from notification import (
     AbstractNotification, CloudWatchNotification, DatadogNotification,
     parse_notifications
@@ -49,6 +49,9 @@ class TestCloudWatchNotification(unittest.TestCase):
         assert attachments[0]['fields'][3]['title'] == 'Reason'
         assert attachments[0]['fields'][3]['value'] == 'Threshold Crossed: 1 datapoint (7.9053535353535365) was not greater than or equal to the threshold (8.0).'
 
+    def test_get_emoji(self):
+        assert self.notif.get_emoji() == ':ok:'
+
 class TestDatadogNotification(unittest.TestCase):
 
     @classmethod
@@ -68,3 +71,9 @@ class TestDatadogNotification(unittest.TestCase):
         assert len(attachments) == 1
         assert attachments[0]['color'] == '#FF0000'
         assert attachments[0]['title'] == 'host.example.com'
+
+    def test_get_emoji(self):
+        assert self.notif.get_emoji() == ':datadog:'
+
+    def test_message_contains_link_to_event(self):
+        assert 'https://app.datadoghq.com/event/event?id=443703058061736990' in self.notif.message

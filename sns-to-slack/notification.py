@@ -57,9 +57,9 @@ class AbstractNotification:
 
     def get_emoji(self):
         try:
-            return self.EMOJI_MAP[self._event_cond]
+            return self.EMOJI_MAP[self.topic_type][self._event_cond]
         except KeyError:
-            if self.topic_name == 'alerts':
+            if 'alerts' in self.topic_name:
                 return ':fire:'
             return self.DEFAULT_EMOJI
 
@@ -70,6 +70,13 @@ class AbstractNotification:
     @property
     def topic_name(self):
         return self._topic_arn.split(':')[-1]
+
+    @property
+    def topic_type(self):
+        matches = re.search(r'(notices|alerts)', self.topic_name)
+        if matches:
+            return matches.groups()[0]
+        return 'default'
 
     @property
     def subject(self):
@@ -143,7 +150,7 @@ class CloudWatchNotification(AbstractNotification):
 
     def __init__(self, event):
         super(CloudWatchNotification, self).__init__(event)
-        self._event_cond = self._message['NewStateValue']
+        self._event_cond = self._message['NewStateValue'].lower()
         self._alarm = self._message['AlarmName']
         self._status = self._message['NewStateValue']
         self._description = self._message['AlarmDescription']
@@ -151,9 +158,9 @@ class CloudWatchNotification(AbstractNotification):
 
     def _get_color(self):
         color_map = {
-            'OK': 'good',
-            'INSUFFICIENT_DATA': 'warning',
-            'ALARM': 'danger'
+            'ok': 'good',
+            'insuffcient_data': 'warning',
+            'alarm': 'danger'
         }
         return color_map[self._event_cond]
 
@@ -287,9 +294,7 @@ class CodePipelineNotification(AbstractNotification):
     USERNAME = 'AWS CodePipeline'
     EMOJI_MAP = {
         'notices': {
-            'STARTED': ':ok:',
-            'FAILED': ':fire:',
-            'SUCCEEDED': ':ok:'
+            'default': ':datadog:'
         }
     }
 
@@ -330,14 +335,15 @@ class DatadogNotification(AbstractNotification):
     USERNAME = 'Datadog'
     EMOJI_MAP = {
         'notices' : {
-            'Recovered': ':ok:',
-            'Warn': ':warning:',
-            'Triggered': ':fire:'
+            'default': ':datadog:'
         }
     }
 
     def __init__(self, event):
         super(DatadogNotification, self).__init__(event)
+        matches = re.search(r'Event URL: (\S*)', self._message)
+        self._event_url = matches.groups()[0] if matches else None
+        self._message = '<{}|{}>\n\n'.format(self._event_url, self._subject) + re.sub(r'\sMonitor Status.*', r'', self._message)
 
     def _get_color(self):
         return {
@@ -348,7 +354,7 @@ class DatadogNotification(AbstractNotification):
 
     @property
     def slack_attachments(self):
-        return [
+        attachments = [
             {
                 'fallback': self._message,
                 'color': self._get_color(),
@@ -367,6 +373,7 @@ class DatadogNotification(AbstractNotification):
                 ]
             }
         ]
+        return attachments
 
     @property
     def status(self):

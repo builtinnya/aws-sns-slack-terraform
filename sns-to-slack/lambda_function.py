@@ -42,21 +42,23 @@ def lambda_handler(event, context):
     }
 
     notifications = parse_notifications(event)
-
     webhook_url = "https://" + config['webhook_url']
     channel_map = config['channel_map']
 
+    status_codes = []
     for notification in notifications:
         payload = {
             'text': notification.message,
             'channel': channel_map.get(notification.topic_name, notification.DEFAULT_CHANNEL),
             'username': notification.USERNAME if notification.USERNAME else notification.DEFAULT_USERNAME,
+            'as_user': False,
             'icon_emoji': notification.get_emoji()
         }
         if notification.slack_attachments:
             payload['attachments'] = notification.slack_attachments
         req = requests.post(webhook_url, json=payload)
-        return req
+        status_codes += [req.status_code]
+    return status_codes
 
 # Test locally
 if __name__ == '__main__':
