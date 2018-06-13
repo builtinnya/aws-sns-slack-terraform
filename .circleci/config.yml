@@ -20,7 +20,48 @@ jobs:
             cd sns-to-slack
             pipenv install --dev
       - run:
-          name: Running tests
-          command: make -C sns-to-slack test
+          name: Running unit tests
+          command: make test
       - store_test_results:
           path: sns-to-slack/test_results
+  package:
+    <<: *default
+    steps:
+      - checkout
+      - run:
+          name: Installing pipenv
+          command: |
+            pip install --user pipenv
+            echo 'export PATH=$PATH:$HOME/.local/bin' >> $BASH_ENV
+      - run:
+          name: Installing all dependencies
+          command: |
+            cd sns-to-slack
+            pipenv install
+      - run:
+          name: Building lambda package
+          command: make build OUTDIR=/tmp
+      - run:
+          name: Checking that the versioned package is up to date
+          command: |
+            diff -y <(unzip -l -v module/lambda/sns-to-slack.zip | grep -v .pyc | grep -v requests | tail -n+4 | awk '{print $7,$8}') \
+                    <(unzip -l -v /tmp/sns-to-slack.zip | grep -v .pyc | grep -v requests | tail -n+4 | awk '{print $7,$8}') --suppress-common-lines
+      - store_artifacts:
+          path: module/lambda/sns-to-slack.zip
+      - store_artifacts:
+          path: /tmp/sns-to-slack.zip
+
+workflows:
+  version: 2
+  build-package:
+    jobs:
+      - build:
+          filters:
+            tags:
+              only: /.*/
+      - package:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /.*/

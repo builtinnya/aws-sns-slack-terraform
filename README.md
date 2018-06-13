@@ -145,13 +145,13 @@ $ pipenv install --dev
 Unit tests can be found inside the [sns-to-slack/tests/](/sns-to-slack/tests) folder and can be run with the following:
 
 ```bash
-make test
+$ make test
 ```
 
 You need to create [module/lambda/sns-to-slack.zip](/module/lambda/sns-to-slack.zip) to update the code as following.
 
 ```bash
-$ ./build-function.sh
+$ make build
 ```
 
 ### Testing
