@@ -65,14 +65,16 @@ if __name__ == '__main__':
 
     parser = ArgumentParser()
     group = parser.add_mutually_exclusive_group()
-    group.add_argument('--cloudwatch', action='store_true')
-    group.add_argument('--datadog', action='store_true')
+    group.add_argument('--cloudwatch', action='store_true', help='Launch the test script with a CloudWatch event')
+    group.add_argument('--datadog', action='store_true', help='Launch the test script with a Datadog event')
     args = parser.parse_args()
 
     if args.cloudwatch:
         sns_template = datasets.CLOUDWATCH_EVENTS
     elif args.datadog:
         sns_template = datasets.DATADOG_EVENTS
+    else:
+        parser.error('One event type must be provided [--cloudwatch | --datadog]')
 
     print('running locally')
     print(lambda_handler(sns_template, None))

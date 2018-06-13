@@ -156,12 +156,12 @@ $ ./build-function.sh
 
 ### Testing
 
-To test the function locally, just run [lambda_function.py](/sns-to-slack/lambda_function.py) with some environment variables.
+To test the function locally, just run [lambda_function.py](/sns-to-slack/lambda_function.py) with some environment variables and the test event.
 
 ```bash
 $ WEBHOOK_URL="hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX" \
   CHANNEL_MAP=`echo '{ "production-notices": "#webhook-tests" }' | base64` \
-  pipenv run python sns-to-slack/lambda_function.py
+  pipenv run python sns-to-slack/lambda_function.py [--cloudwatch | --datadog]
 ```
 
 ## Contributors
