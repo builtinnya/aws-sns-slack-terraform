@@ -352,7 +352,6 @@ class DatadogNotification(AbstractNotification):
             {
                 'fallback': self._message,
                 'color': self._get_color(),
-                'pretext': self._message,
                 'title': self.host,
                 'fields': [
                     {

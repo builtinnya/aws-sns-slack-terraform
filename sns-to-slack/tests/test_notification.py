@@ -67,5 +67,4 @@ class TestDatadogNotification(unittest.TestCase):
         attachments = self.notif.slack_attachments
         assert len(attachments) == 1
         assert attachments[0]['color'] == '#FF0000'
-        assert attachments[0]['pretext'] == self._events['Records'][0]['Sns']['Message']
         assert attachments[0]['title'] == 'host.example.com'
