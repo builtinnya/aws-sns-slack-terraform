@@ -2,8 +2,14 @@
 # Lambda functions
 #
 
+data "null_data_source" "lambda_archive" {
+  inputs {
+    filename = "${substr("${path.module}/lambda/sns-to-slack.zip", length(path.cwd) + 1, -1)}"
+  }
+}
+
 resource "aws_lambda_function" "sns_to_slack" {
-  filename         = "${path.module}/lambda/sns-to-slack.zip"
+  filename         = "${data.null_data_source.lambda_archive.outputs.filename}"
   function_name    = "${var.lambda_function_name}"
   description      = "Sends SNS events to Slack"
   role             = "${aws_iam_role.lambda_sns_to_slack.arn}"
