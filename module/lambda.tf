@@ -5,6 +5,7 @@
 resource "aws_lambda_function" "sns_to_slack" {
   filename         = "${path.module}/lambda/sns-to-slack.zip"
   function_name    = "${var.lambda_function_name}"
+  description      = "Sends SNS events to Slack"
   role             = "${aws_iam_role.lambda_sns_to_slack.arn}"
   handler          = "lambda_function.lambda_handler"
   source_code_hash = "${base64sha256(file("${path.module}/lambda/sns-to-slack.zip"))}"
