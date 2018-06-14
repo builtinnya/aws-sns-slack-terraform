@@ -66,6 +66,7 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 | **default_emoji**          | Default emoji used if no matching emoji found.                    | no           | `":information_source:"`       |
 | **lambda_iam_role_name**   | IAM role name for lambda functions.                               | no           | `"lambda-sns-to-slack"`        |
 | **lambda_iam_policy_name** | IAM policy name for lambda functions.                             | no           | `"lambda-sns-to-slack-policy"` |
+| **log_level**              | Lambda function logging level.                                    | no           | `"INFO"`                       |
 
 ### Output variables
 

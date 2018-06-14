@@ -38,6 +38,7 @@ class AbstractNotification:
 
     def __init__(self, event):
         self._event = event
+        self._message_id = event['MessageId']
         self._event_cond = self.DEFAULT_EVENT_COND
         try:
             self._message = json.loads(event['Message'])
@@ -85,6 +86,10 @@ class AbstractNotification:
     @property
     def message(self):
         return self._message
+
+    @property
+    def message_id(self):
+        return self._message_id
 
 class AutoScalingNotification(AbstractNotification):
 

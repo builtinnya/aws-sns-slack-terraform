@@ -24,24 +24,32 @@
 '''
 Parse an SNS event message and send to a Slack Channel
 '''
-from __future__ import print_function
-
 import os
+import logging
 import json
 import base64
 import requests
 
 from notification import parse_notifications
 
+logging.basicConfig()
+logger = logging.getLogger('sns-to-slack')
+try:
+    logger.setLevel(os.environ.get('LOG_LEVEL', 'INFO').upper())
+except AttributeError:
+    logger.setLevel('INFO')
+
 def lambda_handler(event, context):
     '''The Lambda function handler
     '''
+    logger.debug("Event received: %s", event)
     config = {
         'webhook_url': os.environ['WEBHOOK_URL'],
         'channel_map': json.loads(base64.b64decode(os.environ['CHANNEL_MAP']))
     }
 
     notifications = parse_notifications(event)
+    logger.debug("%s notification(s) parsed from event", len(notifications))
     webhook_url = "https://" + config['webhook_url']
     channel_map = config['channel_map']
 
@@ -58,6 +66,8 @@ def lambda_handler(event, context):
             payload['attachments'] = notification.slack_attachments
         req = requests.post(webhook_url, json=payload)
         status_codes += [req.status_code]
+        if req.status_code == 200:
+            logger.info("Message processed %s", notification.message_id)
     return status_codes
 
 # Test locally
@@ -78,5 +88,5 @@ if __name__ == '__main__':
     else:
         parser.error('One event type must be provided [--cloudwatch | --datadog]')
 
-    print('running locally')
-    print(lambda_handler(sns_template, None))
+    logger.info('running locally')
+    logger.info(lambda_handler(sns_template, None))

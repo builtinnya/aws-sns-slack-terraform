@@ -18,6 +18,7 @@ class TestAbstractNotification(unittest.TestCase):
         assert self.notif.region == 'us-east-1'
         assert self.notif.topic_name == 'production-notices'
         assert self.notif.subject == 'OK: sns-slack-test-from-cloudwatch-total-cpu'
+        assert self.notif.message_id == '95df01b4-ee98-5cb9-9903-4c221d41eb5e'
 
 class TestCloudWatchNotification(unittest.TestCase):
 
