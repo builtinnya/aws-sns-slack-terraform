@@ -79,14 +79,17 @@ if __name__ == '__main__':
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--cloudwatch', action='store_true', help='Launch the test script with a CloudWatch event')
     group.add_argument('--datadog', action='store_true', help='Launch the test script with a Datadog event')
+    group.add_argument('--ssl-check', action='store_true', help='Laumch the test script with SSL check event')
     args = parser.parse_args()
 
     if args.cloudwatch:
         sns_template = datasets.CLOUDWATCH_EVENTS
     elif args.datadog:
         sns_template = datasets.DATADOG_EVENTS
+    elif args.ssl_check:
+        sns_template = datasets.SSL_CHECK_EVENTS
     else:
-        parser.error('One event type must be provided [--cloudwatch | --datadog]')
+        parser.error('One event type must be provided [--cloudwatch | --datadog | --ssl-check]')
 
     logger.info('running locally')
     logger.info(lambda_handler(sns_template, None))

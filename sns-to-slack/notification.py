@@ -20,6 +20,8 @@ def parse_notifications(events):
                     notifications += [CodePipelineNotification(event)]
                 elif 'RDS' in event.get('Subject', ''):
                     notifications += [RDSNotification(event)]
+                elif 'SSL Expiration Check' in event.get('Subject', ''):
+                    notifications += [SSLExpirationNotification(event)]
             except ValueError:
                 if 'app.datadoghq.com' in event.get('Message'):
                     notifications += [DatadogNotification(event)]
@@ -391,3 +393,90 @@ class DatadogNotification(AbstractNotification):
         matches = re.search(r'host:([A-Za-z0-9\.-]*)', self._message)
         if matches:
             return matches.groups()[0]
+
+class SSLExpirationNotification(AbstractNotification):
+
+    USERNAME = 'SSL Production Expiry Checker'
+    EMOJI_MAP = {
+        'notices' : {
+            'default': ':supersurycat:'
+        }
+    }
+
+    def __init__(self, event):
+        super(SSLExpirationNotification, self).__init__(event)
+        self._hostname = self._message['hostname']
+        self._display_message = self._message['message']
+        self._priority = self._message['priority']
+
+    def _get_color(self):
+        return {
+            'Critical': '#FF0000',
+            'High': '#FF8C00',
+            'Low': '#008000'
+        }[self._priority]
+
+    def _get_marker_emoji(self):
+        return {
+            'Critical': ':rotating_light:',
+            'High': ':warning:',
+            'Low': ''
+        }[self._priority]
+
+    @property
+    def slack_attachments(self):
+        if self._priority in ('Critical', 'High'):
+            title = self._hostname
+            title_link = 'https://' + title
+            fallback = self._display_message
+            marker_emoji = self._get_marker_emoji()
+            pretext = 'Certificate will expire soon. Have a look at it!' if self._priority == 'High' else 'Error while validating certificate.'
+            pretext = "{0} {1} {2}".format(marker_emoji, pretext, marker_emoji)
+            fields = [
+                {
+                    "title": "Priority",
+                    "value": self._priority,
+                    "short": False
+                },
+                {
+                    "title": "Reason",
+                    "value": self._display_message,
+                    "short": False
+                }
+            ]
+        elif self._priority == 'Low':
+            title = ':white_check_mark: :scroll:'
+            title_link = None
+            fallback = self._display_message
+            pretext = None
+            fields = [
+                {
+                    "title": "Priority",
+                    "value": self._priority,
+                    "short": False
+                }
+            ]
+        return [{
+            "fallback": fallback,
+            "color": self._get_color(),
+            "pretext": pretext,
+            "title": title,
+            "title_link": title_link,
+            "fields": fields
+        }]
+
+    @property
+    def priority(self):
+        return self._priority
+
+    @property
+    def display_message(self):
+        return self._display_message
+
+    @property
+    def hostname(self):
+        return self._hostname
+
+    @property
+    def message(self):
+        return self._display_message

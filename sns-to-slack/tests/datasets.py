@@ -78,8 +78,46 @@ DATADOG_EVENTS = json.loads(r"""
 ]
 }""")
 
+SSL_CHECK_EVENTS = json.loads(r"""
+{
+"Records": [
+{
+  "Sns": {
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "{\"hostname\":null, \"message\":\"All certificates are valid.\", \"priority\":\"Low\"}",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "SSL Expiration Check"
+  }
+},
+{
+  "Sns": {
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "{\"hostname\":\"fake.hostname.dummy\", \"message\":\"28 days left\", \"priority\":\"High\"}",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "SSL Expiration Check"
+  }
+},
+{
+  "Sns": {
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "{\"hostname\":\"fake.hostname.dummy\", \"message\":\"Broken pipe\", \"priority\":\"Critical\"}",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "SSL Expiration Check"
+  }
+}
+]
+}""")
+
 def get_events(event_type):
     if event_type == 'cloudwatch':
         return CLOUDWATCH_EVENTS
     elif event_type == 'datadog':
         return DATADOG_EVENTS
+    elif event_type == 'ssl_check':
+        return SSL_CHECK_EVENTS

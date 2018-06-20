@@ -1,9 +1,8 @@
-import json
 import unittest
 
 from datasets import get_events
 from notification import (
-    AbstractNotification, CloudWatchNotification, DatadogNotification,
+    CloudWatchNotification, DatadogNotification, SSLExpirationNotification,
     parse_notifications
 )
 
@@ -78,3 +77,53 @@ class TestDatadogNotification(unittest.TestCase):
 
     def test_message_contains_link_to_event(self):
         assert 'https://app.datadoghq.com/event/event?id=443703058061736990' in self.notif.message
+
+class TestSSLExpirationNotification(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls._events = get_events('ssl_check')
+        cls.notifs = parse_notifications(cls._events)
+        cls.nominal = cls.notifs[0]
+        cls.warn = cls.notifs[1]
+        cls.critical = cls.notifs[2]
+
+    def test_parse_notification(self):
+        assert isinstance(self.nominal, SSLExpirationNotification)
+
+    def test_notification_attributes(self):
+        assert self.nominal.priority == 'Low'
+        assert self.nominal.display_message == 'All certificates are valid.'
+        assert self.nominal.hostname is None
+
+        assert self.warn.priority == 'High'
+        assert self.warn.display_message == '28 days left'
+        assert self.warn.hostname == 'fake.hostname.dummy'
+
+        assert self.critical.priority == 'Critical'
+        assert self.critical.display_message == 'Broken pipe'
+        assert self.critical.hostname == 'fake.hostname.dummy'
+
+    def test_slack_attachments(self):
+        assert self.nominal.slack_attachments[0]['title'] == ':white_check_mark: :scroll:'
+        assert self.nominal.slack_attachments[0]['title_link'] is None
+        assert self.nominal.slack_attachments[0]['pretext'] is None
+        assert self.nominal.slack_attachments[0]['color'] == '#008000'
+        assert self.nominal.slack_attachments[0]['fields'][0]['value'] == 'Low'
+
+        assert self.warn.slack_attachments[0]['title'] == 'fake.hostname.dummy'
+        assert self.warn.slack_attachments[0]['title_link'] == 'https://fake.hostname.dummy'
+        assert self.warn.slack_attachments[0]['pretext'] == ':warning: Certificate will expire soon. Have a look at it! :warning:'
+        assert self.warn.slack_attachments[0]['color'] == '#FF8C00'
+        assert self.warn.slack_attachments[0]['fields'][0]['value'] == 'High'
+        assert self.warn.slack_attachments[0]['fields'][1]['value'] == '28 days left'
+
+        assert self.critical.slack_attachments[0]['title'] == 'fake.hostname.dummy'
+        assert self.critical.slack_attachments[0]['title_link'] =='https://fake.hostname.dummy'
+        assert self.critical.slack_attachments[0]['pretext'] == ':rotating_light: Error while validating certificate. :rotating_light:'
+        assert self.critical.slack_attachments[0]['color'] == '#FF0000'
+        assert self.critical.slack_attachments[0]['fields'][0]['value'] == 'Critical'
+        assert self.critical.slack_attachments[0]['fields'][1]['value'] == 'Broken pipe'
+
+    def test_get_emoji(self):
+        assert self.nominal.get_emoji() == ':supersurycat:'
