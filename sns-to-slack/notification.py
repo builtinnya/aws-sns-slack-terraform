@@ -22,6 +22,8 @@ def parse_notifications(events):
                     notifications += [RDSNotification(event)]
                 elif 'SSL Expiration Check' in event.get('Subject', ''):
                     notifications += [SSLExpirationNotification(event)]
+                elif 'Backup checker':
+                    notifications += [BackupCheckerNotification(event)]
             except ValueError:
                 if 'app.datadoghq.com' in event.get('Message'):
                     notifications += [DatadogNotification(event)]
@@ -464,6 +466,62 @@ class SSLExpirationNotification(AbstractNotification):
             "title_link": title_link,
             "fields": fields
         }]
+
+    @property
+    def priority(self):
+        return self._priority
+
+    @property
+    def display_message(self):
+        return self._display_message
+
+    @property
+    def hostname(self):
+        return self._hostname
+
+    @property
+    def message(self):
+        return self._display_message
+
+class BackupCheckerNotification(AbstractNotification):
+
+    USERNAME = 'Backup checker'
+    EMOJI_MAP = {
+        'notices' : {
+            'default': ':open_file_folder:'
+        }
+    }
+
+    def __init__(self, event):
+        super(BackupCheckerNotification, self).__init__(event)
+        self._hostname = self._message['hostname']
+        self._display_message = self._message['message']
+        self._priority = self._message['priority']
+
+    def _get_color(self):
+        return {
+            'Critical': '#FF0000',
+            'Low': '#008000'
+        }[self._priority]
+
+    @property
+    def slack_attachments(self):
+        base = {
+            "title": self._hostname,
+            "title_link": "https://" + self._hostname,
+            "fallback": self._display_message,
+            "color": self._get_color(),
+            "fields": [{
+                "title": "Priority",
+                "value": self._priority,
+                "short": False
+            }, {
+                "title": "Reason",
+                "value": self._display_message,
+                "short": False
+            }]
+        }
+        return [base]
 
     @property
     def priority(self):

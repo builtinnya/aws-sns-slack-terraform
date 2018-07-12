@@ -3,7 +3,7 @@ import unittest
 from datasets import get_events
 from notification import (
     CloudWatchNotification, DatadogNotification, SSLExpirationNotification,
-    parse_notifications
+    BackupCheckerNotification, parse_notifications
 )
 
 class TestAbstractNotification(unittest.TestCase):
@@ -127,3 +127,42 @@ class TestSSLExpirationNotification(unittest.TestCase):
 
     def test_get_emoji(self):
         assert self.nominal.get_emoji() == ':supersurycat:'
+
+class TestBackupCheckerNotification(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        cls._events = get_events('backup_check')
+        cls.notifs = parse_notifications(cls._events)
+        cls.nominal = cls.notifs[0]
+        cls.critical = cls.notifs[1]
+
+    def test_parse_notification(self):
+        assert isinstance(self.nominal, BackupCheckerNotification)
+
+    def test_notification_attributes(self):
+        assert self.nominal.priority == 'Low'
+        assert self.nominal.display_message == 'Backups ran smoothly'
+        assert self.nominal.hostname == 'fake.hostname.dummy'
+
+        assert self.critical.priority == 'Critical'
+        assert self.critical.display_message == 'Backup not performed for mongo'
+        assert self.critical.hostname == 'fake.hostname.dummy'
+
+    def test_slack_attachments(self):
+        assert self.nominal.slack_attachments[0]['title'] == 'fake.hostname.dummy'
+        assert self.nominal.slack_attachments[0]['title_link'] =='https://fake.hostname.dummy'
+        assert self.nominal.slack_attachments[0]['fallback'] == 'Backups ran smoothly'
+        assert self.nominal.slack_attachments[0]['color'] == '#008000'
+        assert self.nominal.slack_attachments[0]['fields'][0]['value'] == 'Low'
+        assert self.nominal.slack_attachments[0]['fields'][1]['value'] == 'Backups ran smoothly'
+
+        assert self.critical.slack_attachments[0]['title'] == 'fake.hostname.dummy'
+        assert self.critical.slack_attachments[0]['title_link'] =='https://fake.hostname.dummy'
+        assert self.critical.slack_attachments[0]['fallback'] == 'Backup not performed for mongo'
+        assert self.critical.slack_attachments[0]['color'] == '#FF0000'
+        assert self.critical.slack_attachments[0]['fields'][0]['value'] == 'Critical'
+        assert self.critical.slack_attachments[0]['fields'][1]['value'] == 'Backup not performed for mongo'
+
+    def test_get_emoji(self):
+        assert self.nominal.get_emoji() == ':open_file_folder:'

@@ -114,6 +114,33 @@ SSL_CHECK_EVENTS = json.loads(r"""
 ]
 }""")
 
+
+BACKUP_CHECKER_EVENTS = json.loads(r"""
+{
+"Records": [
+{
+  "Sns": {
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "{\"hostname\":\"fake.hostname.dummy\", \"message\":\"Backups ran smoothly\", \"priority\":\"Low\"}",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "Backup checker"
+  }
+},
+{
+  "Sns": {
+    "MessageId": "1e675b29-113a-5eb5-9a67-08b184f8e515",
+    "Timestamp": "2018-06-11T15:21:38.646Z",
+    "Message": "{\"hostname\":\"fake.hostname.dummy\", \"message\":\"Backup not performed for mongo\", \"priority\":\"Critical\"}",
+    "Type": "Notification",
+    "TopicArn": "arn:aws:sns:eu-west-1:123456789012:system-health-notices",
+    "Subject": "Backup checker"
+  }
+}
+]
+}""")
+
 def get_events(event_type):
     if event_type == 'cloudwatch':
         return CLOUDWATCH_EVENTS
@@ -121,3 +148,5 @@ def get_events(event_type):
         return DATADOG_EVENTS
     elif event_type == 'ssl_check':
         return SSL_CHECK_EVENTS
+    elif event_type == 'backup_check':
+        return BACKUP_CHECKER_EVENTS
