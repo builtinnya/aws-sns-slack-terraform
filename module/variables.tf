@@ -35,3 +35,8 @@ variable "lambda_iam_policy_name" {
   type    = "string"
   default = "lambda-sns-to-slack-policy"
 }
+
+variable "log_level" {
+  type    = "string"
+  default = "INFO"
+}

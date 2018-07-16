@@ -1,5 +1,7 @@
 # aws-sns-slack-terraform
 
+[![CircleCI](https://circleci.com/gh/builtinnya/aws-sns-slack-terraform.svg?style=svg)](https://circleci.com/gh/builtinnya/aws-sns-slack-terraform)
+
 ![Minimal CloudWatch Screenshot](screenshots/minimal-cloudwatch-screenshot.png)
 
 This is a [Terraform](https://www.terraform.io/) module which maps an AWS SNS topic name to a Slack channel.
@@ -64,6 +66,7 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 | **default_emoji**          | Default emoji used if no matching emoji found.                    | no           | `":information_source:"`       |
 | **lambda_iam_role_name**   | IAM role name for lambda functions.                               | no           | `"lambda-sns-to-slack"`        |
 | **lambda_iam_policy_name** | IAM policy name for lambda functions.                             | no           | `"lambda-sns-to-slack-policy"` |
+| **log_level**              | Lambda function logging level.                                    | no           | `"INFO"`                       |
 
 ### Output variables
 
@@ -73,7 +76,7 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 
 ## Examples
 
-### minimal
+### Minimal
 
 The minimal example is located at [examples/minimal](/examples/minimal).
 It builds no extra AWS resources except a CloudWatch alarm for AWS Lambda's duration metric.
@@ -137,23 +140,29 @@ To prepare development, you need to use [Pipenv](https://docs.pipenv.org/) for t
 
 ```bash
 $ cd sns-to-slack
-$ pipenv install
+$ pipenv install --dev
+```
+
+Unit tests can be found inside the [sns-to-slack/tests/](/sns-to-slack/tests) folder and can be run with the following:
+
+```bash
+$ make test
 ```
 
 You need to create [module/lambda/sns-to-slack.zip](/module/lambda/sns-to-slack.zip) to update the code as following.
 
 ```bash
-$ ./build-function.sh
+$ make build
 ```
 
 ### Testing
 
-To test the function locally, just run [lambda_function.py](/sns-to-slack/lambda_function.py) with some environment variables.
+To test the function locally, just run [lambda_function.py](/sns-to-slack/lambda_function.py) with some environment variables and the test event.
 
 ```bash
 $ WEBHOOK_URL="hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX" \
   CHANNEL_MAP=`echo '{ "production-notices": "#webhook-tests" }' | base64` \
-  python sns-to-slack/lambda_function.py
+  pipenv run python sns-to-slack/lambda_function.py [--cloudwatch | --datadog]
 ```
 
 ## Contributors
