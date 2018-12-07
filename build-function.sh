@@ -17,6 +17,7 @@ cp lambda_function.py _build/
 
 pushd _build
 find . -name '*.pyc' -delete
+rm -f ${zipname}
 zip -r ${zipname} *
 cp ${zipname} ${outdir}
 popd
