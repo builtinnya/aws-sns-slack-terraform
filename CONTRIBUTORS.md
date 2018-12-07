@@ -1,6 +1,12 @@
 # aws-sns-slack-terraform contributors (in alphabetical order)
 
+- [Cyril Thomas](https://github.com/Ketouem)
+  - [Housekeeping: Pipenv & Slimmer package by Ketouem · Pull Request #6 · builtinnya/aws-sns-slack-terraform](https://github.com/builtinnya/aws-sns-slack-terraform/pull/6)
+- [davearata](https://github.com/davearata)
+  - [Codepipeline slack message support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/4)
 - [Katsutoshi Murakami](https://github.com/umisora)
   - [Default emoji support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/2)
+- [Mehdi Ben Abdallah](https://github.com/mbenabda)
+  - [CloudWatch alarm description support](https://github.com/builtinnya/aws-sns-slack-terraform/pull/5)
 - [Nigel Gibbs](https://github.com/gibbsoft)
   - [Add detail to RDS messages in Slack](https://github.com/builtinnya/aws-sns-slack-terraform/pull/1)

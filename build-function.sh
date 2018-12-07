@@ -11,16 +11,13 @@ outdir="${__dir}/module/lambda"
 zipname="sns-to-slack.zip"
 
 pushd sns-to-slack
+pipenv install
+pipenv run pip install -r <(pipenv lock -r) --target _build/
+cp lambda_function.py _build/
 
-zip -u "${outdir}/${zipname}" lambda_function.py
-
-pushd $VIRTUAL_ENV/lib/python2.7/site-packages
-
-zip -u -r "${outdir}/${zipname}" . \
-  --exclude pip\* \
-  --exclude setuptools\* \
-  --exclude virtualenv\*
-
+pushd _build
+zip -r ${zipname} *
+cp ${zipname} ${outdir}
 popd
 
 popd

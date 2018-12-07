@@ -22,7 +22,9 @@ module "sns_to_slack" {
   source = "github.com/builtinnya/aws-sns-slack-terraform/module"
 
   slack_webhook_url = "hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
-  slack_channel_map = "{ \"topic-name\": \"#slack-channel\" }"
+  slack_channel_map = {
+    "topic-name" = "#slack-channel"
+  }
 
   # The following variables are optional.
   lambda_function_name = "sns-to-slack"
@@ -55,7 +57,7 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 |       **Variable**         |                          **Description**                          | **Required** | **Default**                    |
 |:--------------------------:|:-----------------------------------------------------------------:|--------------|--------------------------------|
 | **slack_webhook_url**      | Slack incoming webhook URL without protocol name.                 | yes          |                                |
-| **slack_channel_map**      | Topic-to-channel mapping string in JSON.                          | yes          |                                |
+| **slack_channel_map**      | Topic-to-channel mapping.                                         | yes          |                                |
 | **lambda_function_name**   | AWS Lambda function name for the Slack notifier                   | no           | `"sns-to-slack"`               |
 | **default_username**       | Default username for notifications used if no matching one found. | no           |  `"AWS Lambda"`                |
 | **default_channel**        | Default channel used if no matching channel found.                | no           | `"#webhook-tests"`             |
@@ -131,18 +133,16 @@ $ AWS_ACCESS_KEY_ID=<ACCESS_KEY> \
 ## Development
 
 The main AWS Lambda function code is located in [sns-to-slack/](/sns-to-slack) directory.
-To prepare development, you need to create [virtualenv](https://virtualenv.pypa.io/en/stable/) for this project and install required pip packages as following.
+To prepare development, you need to use [Pipenv](https://docs.pipenv.org/) for this project and install required dependencies as following.
 
 ```bash
-$ virtualenv sns-to-slack/virtualenv
-$ source sns-to-slack/virtualenv/bin/activate
-$ pip install -r sns-to-slack/requirements.txt
+$ cd sns-to-slack
+$ pipenv install
 ```
 
 You need to create [module/lambda/sns-to-slack.zip](/module/lambda/sns-to-slack.zip) to update the code as following.
 
 ```bash
-$ source sns-to-slack/virtualenv/bin/activate # if you haven't yet
 $ ./build-function.sh
 ```
 
