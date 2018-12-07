@@ -66,6 +66,7 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 | lambda\_iam\_role\_name | IAM role name for lambda functions | string | `lambda-sns-to-slack` | no |
 | slack\_channel\_map | Topic-to-channel mapping | map | - | yes |
 | slack\_webhook\_url | Slack incoming webhook URL without protocol name | string | - | yes |
+| username\_prefix | if sepecified the usernames that are looked up will be prefixed by this. Useful in situations where multiple accounts report to a single slack channel. | string | `` | no |
 
 ### Outputs
 

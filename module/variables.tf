@@ -20,6 +20,12 @@ variable "default_username" {
   description = "Default username for notifications used if no matching one found"
 }
 
+variable "username_prefix" {
+  type        = "string"
+  default     = ""
+  description = "if sepecified the usernames that are looked up will be prefixed by this. Useful in situations where multiple accounts report to a single slack channel."
+}
+
 variable "default_channel" {
   type        = "string"
   default     = "#webhook-tests"
