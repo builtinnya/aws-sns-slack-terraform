@@ -52,24 +52,28 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 }
 ```
 
-### Configurable variables
+## Configurable variables
 
-|       **Variable**         |                          **Description**                          | **Required** | **Default**                    |
-|:--------------------------:|:-----------------------------------------------------------------:|--------------|--------------------------------|
-| **slack_webhook_url**      | Slack incoming webhook URL without protocol name.                 | yes          |                                |
-| **slack_channel_map**      | Topic-to-channel mapping.                                         | yes          |                                |
-| **lambda_function_name**   | AWS Lambda function name for the Slack notifier                   | no           | `"sns-to-slack"`               |
-| **default_username**       | Default username for notifications used if no matching one found. | no           |  `"AWS Lambda"`                |
-| **default_channel**        | Default channel used if no matching channel found.                | no           | `"#webhook-tests"`             |
-| **default_emoji**          | Default emoji used if no matching emoji found.                    | no           | `":information_source:"`       |
-| **lambda_iam_role_name**   | IAM role name for lambda functions.                               | no           | `"lambda-sns-to-slack"`        |
-| **lambda_iam_policy_name** | IAM policy name for lambda functions.                             | no           | `"lambda-sns-to-slack-policy"` |
+### Inputs
 
-### Output variables
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| default\_channel | Default channel used if no matching channel found | string | `#webhook-tests` | no |
+| default\_emoji | Default emoji used if no matching emoji found | string | `:information_source:` | no |
+| default\_username | Default username for notifications used if no matching one found | string | `AWS Lambda` | no |
+| lambda\_function\_name | AWS Lambda function name for the Slack notifier | string | `sns-to-slack` | no |
+| lambda\_iam\_policy\_name | IAM policy name for lambda functions | string | `lambda-sns-to-slack-policy` | no |
+| lambda\_iam\_role\_name | IAM role name for lambda functions | string | `lambda-sns-to-slack` | no |
+| slack\_channel\_map | Topic-to-channel mapping | map | - | yes |
+| slack\_webhook\_url | Slack incoming webhook URL without protocol name | string | - | yes |
 
-| **Variable**            | **Description**                   |
-|-------------------------|-----------------------------------|
-| **lambda_function_arn** | AWS Lambda notifier function ARN. |
+### Outputs
+
+| Name | Description |
+|------|-------------|
+| lambda\_function\_arn | AWS Lambda notifier function ARN |
+
+
 
 ## Examples
 
