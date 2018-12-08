@@ -17,6 +17,7 @@ resource "aws_lambda_function" "sns_to_slack" {
       DEFAULT_USERNAME = "${var.default_username}"
       DEFAULT_CHANNEL  = "${var.default_channel}"
       DEFAULT_EMOJI    = "${var.default_emoji}"
+      USERNAME_PREFIX  = "${var.username_prefix}"
     }
   }
 }
