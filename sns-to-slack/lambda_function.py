@@ -33,6 +33,7 @@ import re
 import requests
 
 from base64 import b64decode
+from pprint import pprint
 
 __author__ = "Robb Wagoner (@robbwagoner)"
 __copyright__ = "Copyright 2015 Robb Wagoner"
@@ -47,6 +48,7 @@ DEFAULT_USERNAME = os.environ.get('DEFAULT_USERNAME', 'AWS Lambda')
 DEFAULT_CHANNEL = os.environ.get('DEFAULT_CHANNEL', '#webhook-tests')
 DEFAULT_EMOJI = os.environ.get('DEFAULT_EMOJI', ':information_source:')
 USERNAME_PREFIX = os.environ.get('USERNAME_PREFIX', '')
+SNS_EVENT_MESSAGE_TEMPLATE = os.environ.get('SNS_EVENT_MESSAGE_TEMPLATE', '')
 
 
 def get_slack_emoji(event_src, topic_name, event_cond='default'):
@@ -241,6 +243,29 @@ def lambda_handler(event, context):
                 "value": json_msg.get('detail').get('state')
             }]
         }]
+    elif json_msg.get('Records')[0].get('eventSource') == 'aws:s3':
+        event_src = 's3'
+        event_records = json_msg.get('Records')[0]
+        event_records_s3 = event_records.get('s3')
+        attachments = [{
+            "fields": [{
+                "title": "eventName",
+                "value": event_records.get('eventName'),
+                "short": True
+            }, {
+                "title": "s3 bucket",
+                "value": event_records_s3.get('bucket').get('name'),
+                "short": True
+            }, {
+                "title": "s3 bucket key",
+                "value": event_records_s3.get('object').get('key'),
+                 "short": True
+            }, {
+                "title": "s3 bucket size",
+                "value": event_records_s3.get('object').get('size'),
+                 "short": True
+           }]
+        }]
     else:
         event_src = 'other'
 
@@ -306,5 +331,12 @@ if __name__ == '__main__':
     }
   ]
 }""")
+
+    sns_event_message_template = None
+    if (SNS_EVENT_MESSAGE_TEMPLATE != ""):
+        f = open(os.path.dirname(os.path.abspath(__file__)) + '/' + SNS_EVENT_MESSAGE_TEMPLATE, 'r')
+        sns_event_message_template = json.load(f)
+        sns_event_template['Records'][0]['Sns']['Message'] = json.dumps(sns_event_message_template)
+
     print('running locally')
     print(lambda_handler(sns_event_template, None))
