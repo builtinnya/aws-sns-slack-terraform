@@ -126,7 +126,10 @@ def lambda_handler(event, context):
     event_cond = 'default'
     sns = event['Records'][0]['Sns']
     print('DEBUG EVENT:', sns['Message'])
-    json_msg = json.loads(sns['Message'])
+    try:
+        json_msg = json.loads(sns['Message'])
+    except ValueError, e:
+        json_msg = {}
 
     if sns['Subject']:
         message = sns['Subject']
