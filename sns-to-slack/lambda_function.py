@@ -260,8 +260,6 @@ def lambda_handler(event, context):
 
     # print('DEBUG:', topic_name, region, event_env, event_sev, event_src)
 
-    WEBHOOK_URL = "https://" + config['webhook_url']
-
     channel_map = config['channel_map']
 
     payload = {
@@ -272,7 +270,7 @@ def lambda_handler(event, context):
     if attachments:
         payload['attachments'] = attachments
     print('DEBUG PAYLOAD:', json.dumps(payload))
-    r = requests.post(WEBHOOK_URL, json=payload)
+    r = requests.post(config['webhook_url'], json=payload)
     return r.status_code
 
 # Test locally
