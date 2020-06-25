@@ -24,7 +24,6 @@
 '''
 Parse an SNS event message and send to a Slack Channel
 '''
-from __future__ import print_function
 
 import os
 import json
@@ -128,7 +127,7 @@ def lambda_handler(event, context):
     print('DEBUG EVENT:', sns['Message'])
     try:
         json_msg = json.loads(sns['Message'])
-    except ValueError, e:
+    except ValueError as e:
         json_msg = {}
 
     if sns['Subject']:
