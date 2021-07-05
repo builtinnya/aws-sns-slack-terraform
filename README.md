@@ -23,7 +23,7 @@ module "sns_to_slack" {
   # Or use the following source if your Terraform version >= 0.12
   # source = "github.com/builtinnya/aws-sns-slack-terraform/module-v0.12"
 
-  slack_webhook_url = "hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
+  slack_webhook_url = "https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
   slack_channel_map = {
     "topic-name" = "#slack-channel"
   }
@@ -54,28 +54,25 @@ resource "aws_sns_topic_subscription" "lambda_sns_to_slack" {
 }
 ```
 
-## Configurable variables
-
-### Inputs
+## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| default\_channel | Default channel used if no matching channel found | string | `#webhook-tests` | no |
-| default\_emoji | Default emoji used if no matching emoji found | string | `:information_source:` | no |
-| default\_username | Default username for notifications used if no matching one found | string | `AWS Lambda` | no |
-| lambda\_function\_name | AWS Lambda function name for the Slack notifier | string | `sns-to-slack` | no |
-| lambda\_iam\_policy\_name | IAM policy name for lambda functions | string | `lambda-sns-to-slack-policy` | no |
-| lambda\_iam\_role\_name | IAM role name for lambda functions | string | `lambda-sns-to-slack` | no |
-| slack\_channel\_map | Topic-to-channel mapping | map | - | yes |
-| slack\_webhook\_url | Slack incoming webhook URL without protocol name | string | - | yes |
-| username\_prefix | if sepecified the usernames that are looked up will be prefixed by this. Useful in situations where multiple accounts report to a single slack channel. | string | `` | no |
+|------|-------------|------|---------|:--------:|
+| <a name="input_default_channel"></a> [default\_channel](#input\_default\_channel) | Default channel used if no matching channel found | `string` | `"#webhook-tests"` | no |
+| <a name="input_default_emoji"></a> [default\_emoji](#input\_default\_emoji) | Default emoji used if no matching emoji found | `string` | `":information_source:"` | no |
+| <a name="input_default_username"></a> [default\_username](#input\_default\_username) | Default username for notifications used if no matching one found | `string` | `"AWS Lambda"` | no |
+| <a name="input_lambda_function_name"></a> [lambda\_function\_name](#input\_lambda\_function\_name) | AWS Lambda function name for the Slack notifier | `string` | `"sns-to-slack"` | no |
+| <a name="input_lambda_iam_policy_name"></a> [lambda\_iam\_policy\_name](#input\_lambda\_iam\_policy\_name) | IAM policy name for lambda functions | `string` | `"lambda-sns-to-slack-policy"` | no |
+| <a name="input_lambda_iam_role_name"></a> [lambda\_iam\_role\_name](#input\_lambda\_iam\_role\_name) | IAM role name for lambda functions | `string` | `"lambda-sns-to-slack"` | no |
+| <a name="input_slack_channel_map"></a> [slack\_channel\_map](#input\_slack\_channel\_map) | Topic-to-channel mapping | `map(string)` | n/a | yes |
+| <a name="input_slack_webhook_url"></a> [slack\_webhook\_url](#input\_slack\_webhook\_url) | Slack incoming webhook URL (with or without protocol name) | `string` | n/a | yes |
+| <a name="input_username_prefix"></a> [username\_prefix](#input\_username\_prefix) | if sepecified the usernames that are looked up will be prefixed by this. Useful in situations where multiple accounts report to a single slack channel. | `string` | `""` | no |
 
-### Outputs
+## Outputs
 
 | Name | Description |
 |------|-------------|
-| lambda\_function\_arn | AWS Lambda notifier function ARN |
-
+| <a name="output_lambda_function_arn"></a> [lambda\_function\_arn](#output\_lambda\_function\_arn) | AWS Lambda notifier function AR
 
 
 ## Examples
@@ -106,7 +103,7 @@ It builds no extra AWS resources except a CloudWatch alarm for AWS Lambda's dura
     access_key = "<your AWS Access Key>"
     secret_key = "<your AWS Secret Key>"
     region = "<region>"
-    slack_webhook_url="hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
+    slack_webhook_url="https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX"
     ```
 
 3. Execute the following commands to build resources using Terraform.
@@ -160,7 +157,7 @@ $ ./build-function.sh
 To test the function locally, just run [lambda_function.py](/sns-to-slack/lambda_function.py) with some environment variables.
 
 ```bash
-$ WEBHOOK_URL="hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX" \
+$ WEBHOOK_URL="https://hooks.slack.com/services/XXXXXXXXX/XXXXXXXXX/XXXXXXXXXXXXXXXXXXXXXXXX" \
   CHANNEL_MAP=`echo '{ "production-notices": "#webhook-tests" }' | base64` \
   python sns-to-slack/lambda_function.py
 ```

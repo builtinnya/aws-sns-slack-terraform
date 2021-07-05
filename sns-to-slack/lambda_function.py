@@ -269,7 +269,10 @@ def lambda_handler(event, context):
     if attachments:
         payload['attachments'] = attachments
     print('DEBUG PAYLOAD:', json.dumps(payload))
-    r = requests.post(config['webhook_url'], json=payload)
+
+    webhook_url = config['webhook_url'] if re.match('^https://', config['webhook_url']) else f"https://{config['webhook_url']}"
+    r = requests.post(webhook_url, json=payload)
+
     return r.status_code
 
 # Test locally

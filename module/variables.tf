@@ -1,6 +1,6 @@
 variable "slack_webhook_url" {
   type        = "string"
-  description = "Slack incoming webhook URL without protocol name"
+  description = "Slack incoming webhook URL (with or without protocol name)"
 }
 
 variable "slack_channel_map" {
