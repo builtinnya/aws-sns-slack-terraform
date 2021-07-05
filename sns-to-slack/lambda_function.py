@@ -24,7 +24,6 @@
 '''
 Parse an SNS event message and send to a Slack Channel
 '''
-from __future__ import print_function
 
 import os
 import json
@@ -126,7 +125,10 @@ def lambda_handler(event, context):
     event_cond = 'default'
     sns = event['Records'][0]['Sns']
     print('DEBUG EVENT:', sns['Message'])
-    json_msg = json.loads(sns['Message'])
+    try:
+        json_msg = json.loads(sns['Message'])
+    except ValueError as e:
+        json_msg = {}
 
     if sns['Subject']:
         message = sns['Subject']
@@ -257,8 +259,6 @@ def lambda_handler(event, context):
 
     # print('DEBUG:', topic_name, region, event_env, event_sev, event_src)
 
-    WEBHOOK_URL = "https://" + config['webhook_url']
-
     channel_map = config['channel_map']
 
     payload = {
@@ -269,7 +269,7 @@ def lambda_handler(event, context):
     if attachments:
         payload['attachments'] = attachments
     print('DEBUG PAYLOAD:', json.dumps(payload))
-    r = requests.post(WEBHOOK_URL, json=payload)
+    r = requests.post(config['webhook_url'], json=payload)
     return r.status_code
 
 # Test locally
